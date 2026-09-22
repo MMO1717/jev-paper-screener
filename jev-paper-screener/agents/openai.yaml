@@ -1,0 +1,6 @@
+interface:
+  display_name: "Jev Paper Screener"
+  short_description: "Score papers for a project with Jev"
+  default_prompt: "Use $jev-paper-screener to score these candidate papers against the project brief and sort them into keep, review, or drop."
+policy:
+  allow_implicit_invocation: true

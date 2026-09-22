@@ -1,0 +1,27 @@
+[
+  {
+    "paper_id": "keep-direct",
+    "title": "Adaptive Crop Refinement for RGB Visual Grounding",
+    "authors": "A",
+    "year": "2024",
+    "venue": "CVPR",
+    "abstract": "We refine coarse RGB grounding boxes with an adaptive crop module and report Acc@0.5 on a labeled RGB benchmark.",
+    "source": "arxiv"
+  },
+  {
+    "paper_id": "drop-unrelated",
+    "title": "A Survey of Municipal Bond Pricing",
+    "authors": "B",
+    "year": "2021",
+    "venue": "Finance",
+    "abstract": "This survey reviews yield curve models for municipal bonds and has no vision or grounding component.",
+    "source": "scholar"
+  },
+  {
+    "paper_id": "missing-abs",
+    "title": "Grounding with Missing Abstract",
+    "authors": "C",
+    "year": "2023",
+    "venue": "arxiv"
+  }
+]

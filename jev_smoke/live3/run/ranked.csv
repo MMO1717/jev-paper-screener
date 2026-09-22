@@ -1,0 +1,4 @@
+decision,reason,weighted_score,role,paper_id,title,year,venue,source,url,problem_overlap,method_reuse,experiment_transfer,citation_value,topic_match,method_transferable,evidence_compatible,flags
+keep,gates_pass_high_score,0.998,method,keep-direct,Adaptive Crop Refinement for RGB Visual Grounding,2024,CVPR,arxiv,,1.0,1.0,1.0,0.9867,0.96,0.96,0.96,
+drop,hard_gate_reject,0.0,skip,drop-unrelated,A Survey of Municipal Bond Pricing,2021,Finance,scholar,,0.0,0.0,0.0,0.0,0.01,0.02,0.1,
+incomplete,missing_abstract,0.0,skip,missing-abs,Grounding with Missing Abstract,,,,,,,,,,,,missing_abstract

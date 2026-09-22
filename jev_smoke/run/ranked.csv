@@ -1,0 +1,11 @@
+decision,reason,weighted_score,role,paper_id,title,year,venue,source,url,problem_overlap,method_reuse,experiment_transfer,citation_value,topic_match,method_transferable,evidence_compatible,flags
+keep,gates_pass_high_score,0.94,method,keep-direct,Adaptive Crop Refinement for RGB Visual Grounding,2024,CVPR,arxiv,,1.0,1.0,0.9,0.7333,0.92,0.88,0.9,
+drop,hard_gate_reject,0.0383,skip,drop-unrelated,A Survey of Municipal Bond Pricing,2021,Finance,scholar,,0.0333,0.0333,0.0333,0.0667,0.04,0.05,0.08,
+review,language_risk,0.8567,method,zh-risk,基于自适应裁剪的RGB视觉定位,2024,中文会议,wanfang,,0.9333,0.9,0.8,0.6667,0.9,0.86,0.88,language_risk;held_for_language_risk
+drop,hard_gate_reject,0.7833,method,method-diff-task,Adaptive Cropping for Video Action Recognition,2022,ECCV,arxiv,,0.8,0.9333,0.6667,0.6,0.08,0.72,0.8,
+drop,hard_gate_reject,0.7517,method,evidence-mismatch,Clinical Visual Grounding for Radiology Reports,2023,MICCAI,pubmed,,0.8333,0.7333,0.7,0.6667,0.8,0.7,0.08,
+review,mid_band_or_low_confidence,0.52,method,mid-review,Referring Expression Comprehension with Coarse Boxes,2020,ACL,arxiv,,0.5333,0.5,0.4667,0.6,0.7,0.62,0.66,
+drop,low_weighted_score,0.115,method,low-score,Generic Object Detection Survey,2018,TPAMI,scholar,,0.1333,0.1,0.0667,0.1667,0.7,0.6,0.65,
+review,mid_band_or_low_confidence,1.0,skip,role-skip,Unrelated but High Scoring Placeholder,2024,arxiv,arxiv,,1.0,1.0,1.0,1.0,0.9,0.9,0.9,
+review,hard_gate_uncertain,0.5617,method,uncertain-gate,"Maybe Grounding, Maybe Retrieval",2021,workshop,arxiv,,0.6,0.5667,0.5333,0.5,0.42,0.7,0.7,
+incomplete,missing_abstract,0.0,skip,missing-abs,Grounding with Missing Abstract,,,,,,,,,,,,missing_abstract

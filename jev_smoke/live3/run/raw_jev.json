@@ -1,0 +1,190 @@
+{
+  "keep-direct": {
+    "topic_match": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "method_transferable": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "evidence_compatible": {
+      "type": "noul",
+      "noul": 0.96
+    },
+    "problem_overlap": {
+      "type": "score",
+      "score": 3.0,
+      "confidence": 1.0,
+      "probabilities": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 1.0
+      },
+      "legend": {
+        "0": "No usable overlap with the project.",
+        "1": "Weak or incidental overlap.",
+        "2": "Partial overlap that could inform one section.",
+        "3": "Direct overlap that should shape the project paper."
+      }
+    },
+    "method_reuse": {
+      "type": "score",
+      "score": 3.0,
+      "confidence": 1.0,
+      "probabilities": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 1.0
+      },
+      "legend": {
+        "0": "No usable overlap with the project.",
+        "1": "Weak or incidental overlap.",
+        "2": "Partial overlap that could inform one section.",
+        "3": "Direct overlap that should shape the project paper."
+      }
+    },
+    "experiment_transfer": {
+      "type": "score",
+      "score": 3.0,
+      "confidence": 1.0,
+      "probabilities": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 1.0
+      },
+      "legend": {
+        "0": "No usable overlap with the project.",
+        "1": "Weak or incidental overlap.",
+        "2": "Partial overlap that could inform one section.",
+        "3": "Direct overlap that should shape the project paper."
+      }
+    },
+    "citation_value": {
+      "type": "score",
+      "score": 2.96,
+      "confidence": 0.96,
+      "probabilities": {
+        "0": 0.0,
+        "1": 0.0,
+        "2": 0.03,
+        "3": 0.97
+      },
+      "legend": {
+        "0": "No usable overlap with the project.",
+        "1": "Weak or incidental overlap.",
+        "2": "Partial overlap that could inform one section.",
+        "3": "Direct overlap that should shape the project paper."
+      }
+    },
+    "role_in_paper": {
+      "type": "choice",
+      "choice": "method",
+      "confidence": 0.86,
+      "probabilities": {
+        "method": 0.89,
+        "baseline": 0.03,
+        "skip": 0.02,
+        "dataset": 0.0,
+        "related_work": 0.06
+      }
+    }
+  },
+  "drop-unrelated": {
+    "topic_match": {
+      "type": "noul",
+      "noul": 0.01
+    },
+    "method_transferable": {
+      "type": "noul",
+      "noul": 0.02
+    },
+    "evidence_compatible": {
+      "type": "noul",
+      "noul": 0.1
+    },
+    "problem_overlap": {
+      "type": "score",
+      "score": 0.0,
+      "confidence": 1.0,
+      "probabilities": {
+        "0": 1.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0
+      },
+      "legend": {
+        "0": "No usable overlap with the project.",
+        "1": "Weak or incidental overlap.",
+        "2": "Partial overlap that could inform one section.",
+        "3": "Direct overlap that should shape the project paper."
+      }
+    },
+    "method_reuse": {
+      "type": "score",
+      "score": 0.0,
+      "confidence": 1.0,
+      "probabilities": {
+        "0": 1.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0
+      },
+      "legend": {
+        "0": "No usable overlap with the project.",
+        "1": "Weak or incidental overlap.",
+        "2": "Partial overlap that could inform one section.",
+        "3": "Direct overlap that should shape the project paper."
+      }
+    },
+    "experiment_transfer": {
+      "type": "score",
+      "score": 0.0,
+      "confidence": 1.0,
+      "probabilities": {
+        "0": 1.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0
+      },
+      "legend": {
+        "0": "No usable overlap with the project.",
+        "1": "Weak or incidental overlap.",
+        "2": "Partial overlap that could inform one section.",
+        "3": "Direct overlap that should shape the project paper."
+      }
+    },
+    "citation_value": {
+      "type": "score",
+      "score": 0.0,
+      "confidence": 1.0,
+      "probabilities": {
+        "0": 1.0,
+        "1": 0.0,
+        "2": 0.0,
+        "3": 0.0
+      },
+      "legend": {
+        "0": "No usable overlap with the project.",
+        "1": "Weak or incidental overlap.",
+        "2": "Partial overlap that could inform one section.",
+        "3": "Direct overlap that should shape the project paper."
+      }
+    },
+    "role_in_paper": {
+      "type": "choice",
+      "choice": "skip",
+      "confidence": 1.0,
+      "probabilities": {
+        "related_work": 0.0,
+        "dataset": 0.0,
+        "baseline": 0.0,
+        "skip": 1.0,
+        "method": 0.0
+      }
+    }
+  }
+}

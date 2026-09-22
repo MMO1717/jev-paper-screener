@@ -1,0 +1,14 @@
+{
+  "project": {
+    "title": "RGB visual grounding for AIC",
+    "brief": "Build a project paper on adaptive RGB visual grounding. Methods must transfer to a labeled RGB benchmark. Do not mix clinical claims or official contest scores.",
+    "method_constraints": "Prefer crop refinement, hinting, or multimodal fusion that can run on RGB images.",
+    "evidence_constraints": "Synthetic or labeled RGB evaluation only. No clinical performance claims."
+  },
+  "weights": {
+    "problem_overlap": 0.35,
+    "method_reuse": 0.3,
+    "experiment_transfer": 0.2,
+    "citation_value": 0.15
+  }
+}

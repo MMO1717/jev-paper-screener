@@ -1,0 +1,90 @@
+[
+  {
+    "paper_id": "keep-direct",
+    "title": "Adaptive Crop Refinement for RGB Visual Grounding",
+    "authors": "A",
+    "year": "2024",
+    "venue": "CVPR",
+    "abstract": "We refine coarse RGB grounding boxes with an adaptive crop module and report Acc@0.5 on a labeled RGB benchmark.",
+    "source": "arxiv"
+  },
+  {
+    "paper_id": "drop-unrelated",
+    "title": "A Survey of Municipal Bond Pricing",
+    "authors": "B",
+    "year": "2021",
+    "venue": "Finance",
+    "abstract": "This survey reviews yield curve models for municipal bonds and has no vision or grounding component.",
+    "source": "scholar"
+  },
+  {
+    "paper_id": "missing-abs",
+    "title": "Grounding with Missing Abstract",
+    "authors": "C",
+    "year": "2023",
+    "venue": "arxiv"
+  },
+  {
+    "paper_id": "zh-risk",
+    "title": "基于自适应裁剪的RGB视觉定位",
+    "authors": "D",
+    "year": "2024",
+    "venue": "中文会议",
+    "abstract": "本文提出一种面向RGB图像的自适应裁剪视觉定位方法，并在标注基准上报告 Acc@0.5。",
+    "source": "wanfang"
+  },
+  {
+    "paper_id": "method-diff-task",
+    "title": "Adaptive Cropping for Video Action Recognition",
+    "authors": "E",
+    "year": "2022",
+    "venue": "ECCV",
+    "abstract": "We use adaptive crops to recognize actions in videos. The crop module is reusable, but the task is action recognition rather than visual grounding.",
+    "source": "arxiv"
+  },
+  {
+    "paper_id": "evidence-mismatch",
+    "title": "Clinical Visual Grounding for Radiology Reports",
+    "authors": "F",
+    "year": "2023",
+    "venue": "MICCAI",
+    "abstract": "We ground findings in chest X-rays with clinician labels and report clinical accuracy.",
+    "source": "pubmed"
+  },
+  {
+    "paper_id": "mid-review",
+    "title": "Referring Expression Comprehension with Coarse Boxes",
+    "authors": "G",
+    "year": "2020",
+    "venue": "ACL",
+    "abstract": "A language-vision model grounds referring expressions using coarse boxes. Overlap with RGB grounding is partial and the evaluation protocol differs.",
+    "source": "arxiv"
+  },
+  {
+    "paper_id": "low-score",
+    "title": "Generic Object Detection Survey",
+    "authors": "H",
+    "year": "2018",
+    "venue": "TPAMI",
+    "abstract": "A broad survey of object detection. It mentions bounding boxes but does not study grounding, crop refinement, or project-specific evaluation.",
+    "source": "scholar"
+  },
+  {
+    "paper_id": "role-skip",
+    "title": "Unrelated but High Scoring Placeholder",
+    "authors": "I",
+    "year": "2024",
+    "venue": "arxiv",
+    "abstract": "Direct RGB visual grounding with adaptive crops and labeled Acc@0.5, included to test skip routing.",
+    "source": "arxiv"
+  },
+  {
+    "paper_id": "uncertain-gate",
+    "title": "Maybe Grounding, Maybe Retrieval",
+    "authors": "J",
+    "year": "2021",
+    "venue": "workshop",
+    "abstract": "The abstract mentions localization and retrieval without making the task identity clear.",
+    "source": "arxiv"
+  }
+]

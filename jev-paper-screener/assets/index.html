@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Jev Paper Screener</title>
+  <style>
+    :root { --bg:#f4f1ea; --ink:#1c1915; --muted:#5e584f; --line:#d7cfc3; --keep:#215c3a; --review:#8a5a12; --drop:#8a2d2d; --panel:#fffdf8; }
+    * { box-sizing: border-box; }
+    body { margin:0; font: 14px/1.45 ui-sans-serif, system-ui, sans-serif; background:var(--bg); color:var(--ink); }
+    h1,h2,h3 { margin:0 0 .5rem; font-weight:650; letter-spacing:0; }
+    button, input, textarea { font: inherit; }
+    .app { display:grid; grid-template-columns: 280px minmax(280px,1fr) minmax(360px,1.2fr); min-height:100vh; }
+    aside, main, section { padding:16px; border-right:1px solid var(--line); }
+    section { border-right:0; }
+    label { display:block; margin:8px 0 4px; color:var(--muted); }
+    input, textarea { width:100%; border:1px solid var(--line); background:var(--panel); padding:8px; }
+    textarea { min-height:90px; resize:vertical; }
+    .row { display:flex; gap:8px; flex-wrap:wrap; }
+    button { border:1px solid var(--ink); background:var(--ink); color:#fff; padding:8px 12px; cursor:pointer; }
+    button.secondary { background:transparent; color:var(--ink); }
+    .status { margin-top:10px; color:var(--muted); }
+    .error { color:var(--drop); }
+    .list { display:flex; flex-direction:column; gap:8px; max-height:calc(100vh - 180px); overflow:auto; }
+    .card { background:var(--panel); border:1px solid var(--line); padding:10px; }
+    .meta { color:var(--muted); font-size:12px; }
+    .cols { display:grid; grid-template-columns:1fr; gap:12px; }
+    @media (min-width: 1100px) { .cols { grid-template-columns: 1fr 1fr 1fr; } }
+    .keep { border-top:3px solid var(--keep); }
+    .review { border-top:3px solid var(--review); }
+    .drop, .incomplete { border-top:3px solid var(--drop); }
+    .badge { display:inline-block; padding:1px 6px; border:1px solid currentColor; font-size:11px; margin-right:6px; }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside>
+      <h1>Jev 筛选</h1>
+      <p class="meta">只打分，不检索。结果是筛选辅助，不是正式 related work 证据。</p>
+      <div id="health" class="status">检查密钥中...</div>
+      <label>项目标题</label>
+      <input id="title" value="Project paper">
+      <label>项目简介</label>
+      <textarea id="brief" placeholder="任务、方法约束、证据类型"></textarea>
+      <label>方法约束</label>
+      <textarea id="method"></textarea>
+      <label>证据约束</label>
+      <textarea id="evidence"></textarea>
+      <label>权重</label>
+      <div class="row">
+        <input id="w1" type="number" step="0.05" value="0.35">
+        <input id="w2" type="number" step="0.05" value="0.30">
+        <input id="w3" type="number" step="0.05" value="0.20">
+        <input id="w4" type="number" step="0.05" value="0.15">
+      </div>
+    </aside>
+    <main>
+      <h2>候选导入</h2>
+      <input id="file" type="file" accept=".json,.csv,.bib,.txt">
+      <label>JSON / CSV / BibTeX</label>
+      <textarea id="candidates" placeholder='[{"title":"...","abstract":"..."}]'></textarea>
+      <div class="row">
+        <button class="secondary" id="normalize">只规范化</button>
+        <button id="screen">Jev 打分</button>
+        <button class="secondary" id="export">导出 JSON</button>
+      </div>
+      <div id="message" class="status"></div>
+      <div id="imported" class="list"></div>
+    </main>
+    <section>
+      <h2>Keep / Review / Drop</h2>
+      <div class="cols">
+        <div><h3>Keep</h3><div id="keep" class="list"></div></div>
+        <div><h3>Review</h3><div id="review" class="list"></div></div>
+        <div><h3>Drop / Incomplete</h3><div id="drop" class="list"></div></div>
+      </div>
+    </section>
+  </div>
+  <script>
+    const $ = (id) => document.getElementById(id);
+    let lastResult = null;
+    async function health() {
+      const res = await fetch('/api/health');
+      const data = await res.json();
+      $('health').textContent = data.has_key ? '已检测到 TYPESAFE_API_KEY' : '没有 TYPESAFE_API_KEY，可导入但不能打分';
+    }
+    function project() {
+      return { title: $('title').value, brief: $('brief').value, method_constraints: $('method').value, evidence_constraints: $('evidence').value };
+    }
+    function weights() {
+      return { problem_overlap: Number($('w1').value), method_reuse: Number($('w2').value), experiment_transfer: Number($('w3').value), citation_value: Number($('w4').value) };
+    }
+    function renderImported(papers, incomplete) {
+      const box = $('imported');
+      box.innerHTML = '';
+      [...papers, ...incomplete].forEach((item) => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerHTML = '<h3>' + (item.title || '(no title)') + '</h3><div class="meta">' + (item.paper_id || '') + ' ' + (item.reason || (item.language_risk ? 'language_risk' : '')) + '</div>';
+        box.appendChild(div);
+      });
+    }
+    function card(row) {
+      const d = row.decision;
+      const p = row.paper;
+      return '<div class="card ' + d.decision + '"><span class="badge">' + d.decision + '</span><strong>' + p.title + '</strong><div class="meta">' + d.weighted_score + ' · ' + d.role + ' · ' + d.reason + '</div></div>';
+    }
+    function renderResult(result) {
+      lastResult = result;
+      const groups = {keep:[], review:[], drop:[]};
+      (result.decisions || []).forEach((row) => {
+        const key = row.decision.decision === 'keep' ? 'keep' : row.decision.decision === 'review' ? 'review' : 'drop';
+        groups[key].push(row);
+      });
+      $('keep').innerHTML = groups.keep.map(card).join('');
+      $('review').innerHTML = groups.review.map(card).join('');
+      $('drop').innerHTML = groups.drop.map(card).join('');
+      $('message').textContent = result.out_dir ? ('已写入 ' + result.out_dir) : JSON.stringify(result.counts || {});
+    }
+    $('file').addEventListener('change', async (event) => {
+      const file = event.target.files[0];
+      if (!file) return;
+      $('candidates').value = await file.text();
+    });
+    $('normalize').addEventListener('click', async () => {
+      const res = await fetch('/api/normalize', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({text:$('candidates').value, filename:'paste.json'})});
+      const data = await res.json();
+      if (!res.ok) { $('message').textContent = data.error; $('message').className = 'status error'; return; }
+      renderImported(data.papers, data.incomplete);
+      $('message').textContent = '完整 ' + data.papers.length + '，缺字段 ' + data.incomplete.length;
+    });
+    $('screen').addEventListener('click', async () => {
+      $('message').textContent = '打分中...';
+      const res = await fetch('/api/screen', {method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({project: project(), weights: weights(), text:$('candidates').value, filename:'paste.json'})});
+      const data = await res.json();
+      if (!res.ok) { $('message').textContent = data.error; $('message').className = 'status error'; return; }
+      $('message').className = 'status';
+      renderImported((data.decisions||[]).map(x=>x.paper), []);
+      renderResult(data);
+    });
+    $('export').addEventListener('click', () => {
+      if (!lastResult) return;
+      const blob = new Blob([JSON.stringify(lastResult, null, 2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'jev-screen.json'; a.click();
+      URL.revokeObjectURL(url);
+    });
+    health();
+  </script>
+</body>
+</html>

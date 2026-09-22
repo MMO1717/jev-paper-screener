@@ -1,0 +1,1394 @@
+{
+  "model": "jev-1.13.0",
+  "created_at": "20260921T160520Z",
+  "project": {
+    "title": "RGB visual grounding for AIC",
+    "brief": "Build a project paper on adaptive RGB visual grounding. Methods must transfer to a labeled RGB benchmark. Do not mix clinical claims or official contest scores.",
+    "method_constraints": "Prefer crop refinement, hinting, or multimodal fusion that can run on RGB images.",
+    "evidence_constraints": "Synthetic or labeled RGB evaluation only. No clinical performance claims."
+  },
+  "weights": {
+    "problem_overlap": 0.35,
+    "method_reuse": 0.3,
+    "experiment_transfer": 0.2,
+    "citation_value": 0.15
+  },
+  "counts": {
+    "scored": 9,
+    "incomplete": 1,
+    "errors": 0,
+    "keep": 1,
+    "review": 4,
+    "drop": 4
+  },
+  "decisions": [
+    {
+      "paper": {
+        "paper_id": "keep-direct",
+        "title": "Adaptive Crop Refinement for RGB Visual Grounding",
+        "authors": "A",
+        "year": "2024",
+        "venue": "CVPR",
+        "abstract": "We refine coarse RGB grounding boxes with an adaptive crop module and report Acc@0.5 on a labeled RGB benchmark.",
+        "source": "arxiv",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "keep",
+        "reason": "gates_pass_high_score",
+        "weighted_score": 0.94,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.92,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.88,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.9,
+            "rejected": false,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 1.0,
+          "method_reuse": 1.0,
+          "experiment_transfer": 0.9,
+          "citation_value": 0.7333
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "method",
+        "role_confidence": 0.8,
+        "flags": []
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "drop-unrelated",
+        "title": "A Survey of Municipal Bond Pricing",
+        "authors": "B",
+        "year": "2021",
+        "venue": "Finance",
+        "abstract": "This survey reviews yield curve models for municipal bonds and has no vision or grounding component.",
+        "source": "scholar",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "drop",
+        "reason": "hard_gate_reject",
+        "weighted_score": 0.0383,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.04,
+            "rejected": true,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.05,
+            "rejected": true,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.08,
+            "rejected": true,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 0.0333,
+          "method_reuse": 0.0333,
+          "experiment_transfer": 0.0333,
+          "citation_value": 0.0667
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "skip",
+        "role_confidence": 0.8,
+        "flags": []
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "zh-risk",
+        "title": "基于自适应裁剪的RGB视觉定位",
+        "authors": "D",
+        "year": "2024",
+        "venue": "中文会议",
+        "abstract": "本文提出一种面向RGB图像的自适应裁剪视觉定位方法，并在标注基准上报告 Acc@0.5。",
+        "source": "wanfang",
+        "url": "",
+        "language_risk": true,
+        "flags": [
+          "language_risk"
+        ]
+      },
+      "decision": {
+        "decision": "review",
+        "reason": "language_risk",
+        "weighted_score": 0.8567,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.9,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.86,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.88,
+            "rejected": false,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 0.9333,
+          "method_reuse": 0.9,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.6667
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "method",
+        "role_confidence": 0.8,
+        "flags": [
+          "language_risk",
+          "held_for_language_risk"
+        ]
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "method-diff-task",
+        "title": "Adaptive Cropping for Video Action Recognition",
+        "authors": "E",
+        "year": "2022",
+        "venue": "ECCV",
+        "abstract": "We use adaptive crops to recognize actions in videos. The crop module is reusable, but the task is action recognition rather than visual grounding.",
+        "source": "arxiv",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "drop",
+        "reason": "hard_gate_reject",
+        "weighted_score": 0.7833,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.08,
+            "rejected": true,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.72,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.8,
+            "rejected": false,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.9333,
+          "experiment_transfer": 0.6667,
+          "citation_value": 0.6
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "method",
+        "role_confidence": 0.8,
+        "flags": []
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "evidence-mismatch",
+        "title": "Clinical Visual Grounding for Radiology Reports",
+        "authors": "F",
+        "year": "2023",
+        "venue": "MICCAI",
+        "abstract": "We ground findings in chest X-rays with clinician labels and report clinical accuracy.",
+        "source": "pubmed",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "drop",
+        "reason": "hard_gate_reject",
+        "weighted_score": 0.7517,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.8,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.7,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.08,
+            "rejected": true,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 0.8333,
+          "method_reuse": 0.7333,
+          "experiment_transfer": 0.7,
+          "citation_value": 0.6667
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "method",
+        "role_confidence": 0.8,
+        "flags": []
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "mid-review",
+        "title": "Referring Expression Comprehension with Coarse Boxes",
+        "authors": "G",
+        "year": "2020",
+        "venue": "ACL",
+        "abstract": "A language-vision model grounds referring expressions using coarse boxes. Overlap with RGB grounding is partial and the evaluation protocol differs.",
+        "source": "arxiv",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "review",
+        "reason": "mid_band_or_low_confidence",
+        "weighted_score": 0.52,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.7,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.62,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.66,
+            "rejected": false,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 0.5333,
+          "method_reuse": 0.5,
+          "experiment_transfer": 0.4667,
+          "citation_value": 0.6
+        },
+        "score_confidence": {
+          "problem_overlap": 0.45,
+          "method_reuse": 0.45,
+          "experiment_transfer": 0.45,
+          "citation_value": 0.45
+        },
+        "role": "method",
+        "role_confidence": 0.45,
+        "flags": []
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "low-score",
+        "title": "Generic Object Detection Survey",
+        "authors": "H",
+        "year": "2018",
+        "venue": "TPAMI",
+        "abstract": "A broad survey of object detection. It mentions bounding boxes but does not study grounding, crop refinement, or project-specific evaluation.",
+        "source": "scholar",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "drop",
+        "reason": "low_weighted_score",
+        "weighted_score": 0.115,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.7,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.6,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.65,
+            "rejected": false,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 0.1333,
+          "method_reuse": 0.1,
+          "experiment_transfer": 0.0667,
+          "citation_value": 0.1667
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "method",
+        "role_confidence": 0.8,
+        "flags": []
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "role-skip",
+        "title": "Unrelated but High Scoring Placeholder",
+        "authors": "I",
+        "year": "2024",
+        "venue": "arxiv",
+        "abstract": "Direct RGB visual grounding with adaptive crops and labeled Acc@0.5, included to test skip routing.",
+        "source": "arxiv",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "review",
+        "reason": "mid_band_or_low_confidence",
+        "weighted_score": 1.0,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.9,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.9,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.9,
+            "rejected": false,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 1.0,
+          "method_reuse": 1.0,
+          "experiment_transfer": 1.0,
+          "citation_value": 1.0
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "skip",
+        "role_confidence": 0.8,
+        "flags": []
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "uncertain-gate",
+        "title": "Maybe Grounding, Maybe Retrieval",
+        "authors": "J",
+        "year": "2021",
+        "venue": "workshop",
+        "abstract": "The abstract mentions localization and retrieval without making the task identity clear.",
+        "source": "arxiv",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "review",
+        "reason": "hard_gate_uncertain",
+        "weighted_score": 0.5617,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.42,
+            "rejected": true,
+            "uncertain": true
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.7,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.7,
+            "rejected": false,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 0.6,
+          "method_reuse": 0.5667,
+          "experiment_transfer": 0.5333,
+          "citation_value": 0.5
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "method",
+        "role_confidence": 0.8,
+        "flags": []
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "missing-abs",
+        "title": "Grounding with Missing Abstract",
+        "authors": "",
+        "year": "",
+        "venue": "",
+        "abstract": "",
+        "source": "",
+        "url": "",
+        "language_risk": false,
+        "flags": [
+          "missing_abstract"
+        ]
+      },
+      "decision": {
+        "decision": "incomplete",
+        "reason": "missing_abstract",
+        "weighted_score": 0.0,
+        "gates": [],
+        "scores": {},
+        "score_confidence": {},
+        "role": "skip",
+        "role_confidence": 0.0,
+        "flags": [
+          "missing_abstract"
+        ]
+      }
+    }
+  ],
+  "ranked": [
+    {
+      "paper": {
+        "paper_id": "role-skip",
+        "title": "Unrelated but High Scoring Placeholder",
+        "authors": "I",
+        "year": "2024",
+        "venue": "arxiv",
+        "abstract": "Direct RGB visual grounding with adaptive crops and labeled Acc@0.5, included to test skip routing.",
+        "source": "arxiv",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "review",
+        "reason": "mid_band_or_low_confidence",
+        "weighted_score": 1.0,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.9,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.9,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.9,
+            "rejected": false,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 1.0,
+          "method_reuse": 1.0,
+          "experiment_transfer": 1.0,
+          "citation_value": 1.0
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "skip",
+        "role_confidence": 0.8,
+        "flags": []
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "keep-direct",
+        "title": "Adaptive Crop Refinement for RGB Visual Grounding",
+        "authors": "A",
+        "year": "2024",
+        "venue": "CVPR",
+        "abstract": "We refine coarse RGB grounding boxes with an adaptive crop module and report Acc@0.5 on a labeled RGB benchmark.",
+        "source": "arxiv",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "keep",
+        "reason": "gates_pass_high_score",
+        "weighted_score": 0.94,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.92,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.88,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.9,
+            "rejected": false,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 1.0,
+          "method_reuse": 1.0,
+          "experiment_transfer": 0.9,
+          "citation_value": 0.7333
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "method",
+        "role_confidence": 0.8,
+        "flags": []
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "zh-risk",
+        "title": "基于自适应裁剪的RGB视觉定位",
+        "authors": "D",
+        "year": "2024",
+        "venue": "中文会议",
+        "abstract": "本文提出一种面向RGB图像的自适应裁剪视觉定位方法，并在标注基准上报告 Acc@0.5。",
+        "source": "wanfang",
+        "url": "",
+        "language_risk": true,
+        "flags": [
+          "language_risk"
+        ]
+      },
+      "decision": {
+        "decision": "review",
+        "reason": "language_risk",
+        "weighted_score": 0.8567,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.9,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.86,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.88,
+            "rejected": false,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 0.9333,
+          "method_reuse": 0.9,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.6667
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "method",
+        "role_confidence": 0.8,
+        "flags": [
+          "language_risk",
+          "held_for_language_risk"
+        ]
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "method-diff-task",
+        "title": "Adaptive Cropping for Video Action Recognition",
+        "authors": "E",
+        "year": "2022",
+        "venue": "ECCV",
+        "abstract": "We use adaptive crops to recognize actions in videos. The crop module is reusable, but the task is action recognition rather than visual grounding.",
+        "source": "arxiv",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "drop",
+        "reason": "hard_gate_reject",
+        "weighted_score": 0.7833,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.08,
+            "rejected": true,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.72,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.8,
+            "rejected": false,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.9333,
+          "experiment_transfer": 0.6667,
+          "citation_value": 0.6
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "method",
+        "role_confidence": 0.8,
+        "flags": []
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "evidence-mismatch",
+        "title": "Clinical Visual Grounding for Radiology Reports",
+        "authors": "F",
+        "year": "2023",
+        "venue": "MICCAI",
+        "abstract": "We ground findings in chest X-rays with clinician labels and report clinical accuracy.",
+        "source": "pubmed",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "drop",
+        "reason": "hard_gate_reject",
+        "weighted_score": 0.7517,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.8,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.7,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.08,
+            "rejected": true,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 0.8333,
+          "method_reuse": 0.7333,
+          "experiment_transfer": 0.7,
+          "citation_value": 0.6667
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "method",
+        "role_confidence": 0.8,
+        "flags": []
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "uncertain-gate",
+        "title": "Maybe Grounding, Maybe Retrieval",
+        "authors": "J",
+        "year": "2021",
+        "venue": "workshop",
+        "abstract": "The abstract mentions localization and retrieval without making the task identity clear.",
+        "source": "arxiv",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "review",
+        "reason": "hard_gate_uncertain",
+        "weighted_score": 0.5617,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.42,
+            "rejected": true,
+            "uncertain": true
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.7,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.7,
+            "rejected": false,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 0.6,
+          "method_reuse": 0.5667,
+          "experiment_transfer": 0.5333,
+          "citation_value": 0.5
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "method",
+        "role_confidence": 0.8,
+        "flags": []
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "mid-review",
+        "title": "Referring Expression Comprehension with Coarse Boxes",
+        "authors": "G",
+        "year": "2020",
+        "venue": "ACL",
+        "abstract": "A language-vision model grounds referring expressions using coarse boxes. Overlap with RGB grounding is partial and the evaluation protocol differs.",
+        "source": "arxiv",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "review",
+        "reason": "mid_band_or_low_confidence",
+        "weighted_score": 0.52,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.7,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.62,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.66,
+            "rejected": false,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 0.5333,
+          "method_reuse": 0.5,
+          "experiment_transfer": 0.4667,
+          "citation_value": 0.6
+        },
+        "score_confidence": {
+          "problem_overlap": 0.45,
+          "method_reuse": 0.45,
+          "experiment_transfer": 0.45,
+          "citation_value": 0.45
+        },
+        "role": "method",
+        "role_confidence": 0.45,
+        "flags": []
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "low-score",
+        "title": "Generic Object Detection Survey",
+        "authors": "H",
+        "year": "2018",
+        "venue": "TPAMI",
+        "abstract": "A broad survey of object detection. It mentions bounding boxes but does not study grounding, crop refinement, or project-specific evaluation.",
+        "source": "scholar",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "drop",
+        "reason": "low_weighted_score",
+        "weighted_score": 0.115,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.7,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.6,
+            "rejected": false,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.65,
+            "rejected": false,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 0.1333,
+          "method_reuse": 0.1,
+          "experiment_transfer": 0.0667,
+          "citation_value": 0.1667
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "method",
+        "role_confidence": 0.8,
+        "flags": []
+      }
+    },
+    {
+      "paper": {
+        "paper_id": "drop-unrelated",
+        "title": "A Survey of Municipal Bond Pricing",
+        "authors": "B",
+        "year": "2021",
+        "venue": "Finance",
+        "abstract": "This survey reviews yield curve models for municipal bonds and has no vision or grounding component.",
+        "source": "scholar",
+        "url": "",
+        "language_risk": false,
+        "flags": []
+      },
+      "decision": {
+        "decision": "drop",
+        "reason": "hard_gate_reject",
+        "weighted_score": 0.0383,
+        "gates": [
+          {
+            "name": "topic_match",
+            "noul": 0.04,
+            "rejected": true,
+            "uncertain": false
+          },
+          {
+            "name": "method_transferable",
+            "noul": 0.05,
+            "rejected": true,
+            "uncertain": false
+          },
+          {
+            "name": "evidence_compatible",
+            "noul": 0.08,
+            "rejected": true,
+            "uncertain": false
+          }
+        ],
+        "scores": {
+          "problem_overlap": 0.0333,
+          "method_reuse": 0.0333,
+          "experiment_transfer": 0.0333,
+          "citation_value": 0.0667
+        },
+        "score_confidence": {
+          "problem_overlap": 0.8,
+          "method_reuse": 0.8,
+          "experiment_transfer": 0.8,
+          "citation_value": 0.8
+        },
+        "role": "skip",
+        "role_confidence": 0.8,
+        "flags": []
+      }
+    }
+  ],
+  "raw_jev": {
+    "keep-direct": {
+      "topic_match": {
+        "type": "noul",
+        "noul": 0.92
+      },
+      "method_transferable": {
+        "type": "noul",
+        "noul": 0.88
+      },
+      "evidence_compatible": {
+        "type": "noul",
+        "noul": 0.9
+      },
+      "role_in_paper": {
+        "type": "choice",
+        "choice": "method",
+        "confidence": 0.8
+      },
+      "problem_overlap": {
+        "type": "score",
+        "score": 3,
+        "confidence": 0.8
+      },
+      "method_reuse": {
+        "type": "score",
+        "score": 3,
+        "confidence": 0.8
+      },
+      "experiment_transfer": {
+        "type": "score",
+        "score": 2.7,
+        "confidence": 0.8
+      },
+      "citation_value": {
+        "type": "score",
+        "score": 2.2,
+        "confidence": 0.8
+      }
+    },
+    "drop-unrelated": {
+      "topic_match": {
+        "type": "noul",
+        "noul": 0.04
+      },
+      "method_transferable": {
+        "type": "noul",
+        "noul": 0.05
+      },
+      "evidence_compatible": {
+        "type": "noul",
+        "noul": 0.08
+      },
+      "role_in_paper": {
+        "type": "choice",
+        "choice": "skip",
+        "confidence": 0.8
+      },
+      "problem_overlap": {
+        "type": "score",
+        "score": 0.1,
+        "confidence": 0.8
+      },
+      "method_reuse": {
+        "type": "score",
+        "score": 0.1,
+        "confidence": 0.8
+      },
+      "experiment_transfer": {
+        "type": "score",
+        "score": 0.1,
+        "confidence": 0.8
+      },
+      "citation_value": {
+        "type": "score",
+        "score": 0.2,
+        "confidence": 0.8
+      }
+    },
+    "zh-risk": {
+      "topic_match": {
+        "type": "noul",
+        "noul": 0.9
+      },
+      "method_transferable": {
+        "type": "noul",
+        "noul": 0.86
+      },
+      "evidence_compatible": {
+        "type": "noul",
+        "noul": 0.88
+      },
+      "role_in_paper": {
+        "type": "choice",
+        "choice": "method",
+        "confidence": 0.8
+      },
+      "problem_overlap": {
+        "type": "score",
+        "score": 2.8,
+        "confidence": 0.8
+      },
+      "method_reuse": {
+        "type": "score",
+        "score": 2.7,
+        "confidence": 0.8
+      },
+      "experiment_transfer": {
+        "type": "score",
+        "score": 2.4,
+        "confidence": 0.8
+      },
+      "citation_value": {
+        "type": "score",
+        "score": 2.0,
+        "confidence": 0.8
+      }
+    },
+    "method-diff-task": {
+      "topic_match": {
+        "type": "noul",
+        "noul": 0.08
+      },
+      "method_transferable": {
+        "type": "noul",
+        "noul": 0.72
+      },
+      "evidence_compatible": {
+        "type": "noul",
+        "noul": 0.8
+      },
+      "role_in_paper": {
+        "type": "choice",
+        "choice": "method",
+        "confidence": 0.8
+      },
+      "problem_overlap": {
+        "type": "score",
+        "score": 2.4,
+        "confidence": 0.8
+      },
+      "method_reuse": {
+        "type": "score",
+        "score": 2.8,
+        "confidence": 0.8
+      },
+      "experiment_transfer": {
+        "type": "score",
+        "score": 2.0,
+        "confidence": 0.8
+      },
+      "citation_value": {
+        "type": "score",
+        "score": 1.8,
+        "confidence": 0.8
+      }
+    },
+    "evidence-mismatch": {
+      "topic_match": {
+        "type": "noul",
+        "noul": 0.8
+      },
+      "method_transferable": {
+        "type": "noul",
+        "noul": 0.7
+      },
+      "evidence_compatible": {
+        "type": "noul",
+        "noul": 0.08
+      },
+      "role_in_paper": {
+        "type": "choice",
+        "choice": "method",
+        "confidence": 0.8
+      },
+      "problem_overlap": {
+        "type": "score",
+        "score": 2.5,
+        "confidence": 0.8
+      },
+      "method_reuse": {
+        "type": "score",
+        "score": 2.2,
+        "confidence": 0.8
+      },
+      "experiment_transfer": {
+        "type": "score",
+        "score": 2.1,
+        "confidence": 0.8
+      },
+      "citation_value": {
+        "type": "score",
+        "score": 2.0,
+        "confidence": 0.8
+      }
+    },
+    "mid-review": {
+      "topic_match": {
+        "type": "noul",
+        "noul": 0.7
+      },
+      "method_transferable": {
+        "type": "noul",
+        "noul": 0.62
+      },
+      "evidence_compatible": {
+        "type": "noul",
+        "noul": 0.66
+      },
+      "role_in_paper": {
+        "type": "choice",
+        "choice": "method",
+        "confidence": 0.45
+      },
+      "problem_overlap": {
+        "type": "score",
+        "score": 1.6,
+        "confidence": 0.45
+      },
+      "method_reuse": {
+        "type": "score",
+        "score": 1.5,
+        "confidence": 0.45
+      },
+      "experiment_transfer": {
+        "type": "score",
+        "score": 1.4,
+        "confidence": 0.45
+      },
+      "citation_value": {
+        "type": "score",
+        "score": 1.8,
+        "confidence": 0.45
+      }
+    },
+    "low-score": {
+      "topic_match": {
+        "type": "noul",
+        "noul": 0.7
+      },
+      "method_transferable": {
+        "type": "noul",
+        "noul": 0.6
+      },
+      "evidence_compatible": {
+        "type": "noul",
+        "noul": 0.65
+      },
+      "role_in_paper": {
+        "type": "choice",
+        "choice": "method",
+        "confidence": 0.8
+      },
+      "problem_overlap": {
+        "type": "score",
+        "score": 0.4,
+        "confidence": 0.8
+      },
+      "method_reuse": {
+        "type": "score",
+        "score": 0.3,
+        "confidence": 0.8
+      },
+      "experiment_transfer": {
+        "type": "score",
+        "score": 0.2,
+        "confidence": 0.8
+      },
+      "citation_value": {
+        "type": "score",
+        "score": 0.5,
+        "confidence": 0.8
+      }
+    },
+    "role-skip": {
+      "topic_match": {
+        "type": "noul",
+        "noul": 0.9
+      },
+      "method_transferable": {
+        "type": "noul",
+        "noul": 0.9
+      },
+      "evidence_compatible": {
+        "type": "noul",
+        "noul": 0.9
+      },
+      "role_in_paper": {
+        "type": "choice",
+        "choice": "skip",
+        "confidence": 0.8
+      },
+      "problem_overlap": {
+        "type": "score",
+        "score": 3,
+        "confidence": 0.8
+      },
+      "method_reuse": {
+        "type": "score",
+        "score": 3,
+        "confidence": 0.8
+      },
+      "experiment_transfer": {
+        "type": "score",
+        "score": 3,
+        "confidence": 0.8
+      },
+      "citation_value": {
+        "type": "score",
+        "score": 3,
+        "confidence": 0.8
+      }
+    },
+    "uncertain-gate": {
+      "topic_match": {
+        "type": "noul",
+        "noul": 0.42
+      },
+      "method_transferable": {
+        "type": "noul",
+        "noul": 0.7
+      },
+      "evidence_compatible": {
+        "type": "noul",
+        "noul": 0.7
+      },
+      "role_in_paper": {
+        "type": "choice",
+        "choice": "method",
+        "confidence": 0.8
+      },
+      "problem_overlap": {
+        "type": "score",
+        "score": 1.8,
+        "confidence": 0.8
+      },
+      "method_reuse": {
+        "type": "score",
+        "score": 1.7,
+        "confidence": 0.8
+      },
+      "experiment_transfer": {
+        "type": "score",
+        "score": 1.6,
+        "confidence": 0.8
+      },
+      "citation_value": {
+        "type": "score",
+        "score": 1.5,
+        "confidence": 0.8
+      }
+    }
+  },
+  "errors": [],
+  "disclaimer": "Screening aid only. Not official related-work evidence."
+}

@@ -1,0 +1,353 @@
+{
+  "keep-direct": {
+    "topic_match": {
+      "type": "noul",
+      "noul": 0.92
+    },
+    "method_transferable": {
+      "type": "noul",
+      "noul": 0.88
+    },
+    "evidence_compatible": {
+      "type": "noul",
+      "noul": 0.9
+    },
+    "role_in_paper": {
+      "type": "choice",
+      "choice": "method",
+      "confidence": 0.8
+    },
+    "problem_overlap": {
+      "type": "score",
+      "score": 3,
+      "confidence": 0.8
+    },
+    "method_reuse": {
+      "type": "score",
+      "score": 3,
+      "confidence": 0.8
+    },
+    "experiment_transfer": {
+      "type": "score",
+      "score": 2.7,
+      "confidence": 0.8
+    },
+    "citation_value": {
+      "type": "score",
+      "score": 2.2,
+      "confidence": 0.8
+    }
+  },
+  "drop-unrelated": {
+    "topic_match": {
+      "type": "noul",
+      "noul": 0.04
+    },
+    "method_transferable": {
+      "type": "noul",
+      "noul": 0.05
+    },
+    "evidence_compatible": {
+      "type": "noul",
+      "noul": 0.08
+    },
+    "role_in_paper": {
+      "type": "choice",
+      "choice": "skip",
+      "confidence": 0.8
+    },
+    "problem_overlap": {
+      "type": "score",
+      "score": 0.1,
+      "confidence": 0.8
+    },
+    "method_reuse": {
+      "type": "score",
+      "score": 0.1,
+      "confidence": 0.8
+    },
+    "experiment_transfer": {
+      "type": "score",
+      "score": 0.1,
+      "confidence": 0.8
+    },
+    "citation_value": {
+      "type": "score",
+      "score": 0.2,
+      "confidence": 0.8
+    }
+  },
+  "zh-risk": {
+    "topic_match": {
+      "type": "noul",
+      "noul": 0.9
+    },
+    "method_transferable": {
+      "type": "noul",
+      "noul": 0.86
+    },
+    "evidence_compatible": {
+      "type": "noul",
+      "noul": 0.88
+    },
+    "role_in_paper": {
+      "type": "choice",
+      "choice": "method",
+      "confidence": 0.8
+    },
+    "problem_overlap": {
+      "type": "score",
+      "score": 2.8,
+      "confidence": 0.8
+    },
+    "method_reuse": {
+      "type": "score",
+      "score": 2.7,
+      "confidence": 0.8
+    },
+    "experiment_transfer": {
+      "type": "score",
+      "score": 2.4,
+      "confidence": 0.8
+    },
+    "citation_value": {
+      "type": "score",
+      "score": 2.0,
+      "confidence": 0.8
+    }
+  },
+  "method-diff-task": {
+    "topic_match": {
+      "type": "noul",
+      "noul": 0.08
+    },
+    "method_transferable": {
+      "type": "noul",
+      "noul": 0.72
+    },
+    "evidence_compatible": {
+      "type": "noul",
+      "noul": 0.8
+    },
+    "role_in_paper": {
+      "type": "choice",
+      "choice": "method",
+      "confidence": 0.8
+    },
+    "problem_overlap": {
+      "type": "score",
+      "score": 2.4,
+      "confidence": 0.8
+    },
+    "method_reuse": {
+      "type": "score",
+      "score": 2.8,
+      "confidence": 0.8
+    },
+    "experiment_transfer": {
+      "type": "score",
+      "score": 2.0,
+      "confidence": 0.8
+    },
+    "citation_value": {
+      "type": "score",
+      "score": 1.8,
+      "confidence": 0.8
+    }
+  },
+  "evidence-mismatch": {
+    "topic_match": {
+      "type": "noul",
+      "noul": 0.8
+    },
+    "method_transferable": {
+      "type": "noul",
+      "noul": 0.7
+    },
+    "evidence_compatible": {
+      "type": "noul",
+      "noul": 0.08
+    },
+    "role_in_paper": {
+      "type": "choice",
+      "choice": "method",
+      "confidence": 0.8
+    },
+    "problem_overlap": {
+      "type": "score",
+      "score": 2.5,
+      "confidence": 0.8
+    },
+    "method_reuse": {
+      "type": "score",
+      "score": 2.2,
+      "confidence": 0.8
+    },
+    "experiment_transfer": {
+      "type": "score",
+      "score": 2.1,
+      "confidence": 0.8
+    },
+    "citation_value": {
+      "type": "score",
+      "score": 2.0,
+      "confidence": 0.8
+    }
+  },
+  "mid-review": {
+    "topic_match": {
+      "type": "noul",
+      "noul": 0.7
+    },
+    "method_transferable": {
+      "type": "noul",
+      "noul": 0.62
+    },
+    "evidence_compatible": {
+      "type": "noul",
+      "noul": 0.66
+    },
+    "role_in_paper": {
+      "type": "choice",
+      "choice": "method",
+      "confidence": 0.45
+    },
+    "problem_overlap": {
+      "type": "score",
+      "score": 1.6,
+      "confidence": 0.45
+    },
+    "method_reuse": {
+      "type": "score",
+      "score": 1.5,
+      "confidence": 0.45
+    },
+    "experiment_transfer": {
+      "type": "score",
+      "score": 1.4,
+      "confidence": 0.45
+    },
+    "citation_value": {
+      "type": "score",
+      "score": 1.8,
+      "confidence": 0.45
+    }
+  },
+  "low-score": {
+    "topic_match": {
+      "type": "noul",
+      "noul": 0.7
+    },
+    "method_transferable": {
+      "type": "noul",
+      "noul": 0.6
+    },
+    "evidence_compatible": {
+      "type": "noul",
+      "noul": 0.65
+    },
+    "role_in_paper": {
+      "type": "choice",
+      "choice": "method",
+      "confidence": 0.8
+    },
+    "problem_overlap": {
+      "type": "score",
+      "score": 0.4,
+      "confidence": 0.8
+    },
+    "method_reuse": {
+      "type": "score",
+      "score": 0.3,
+      "confidence": 0.8
+    },
+    "experiment_transfer": {
+      "type": "score",
+      "score": 0.2,
+      "confidence": 0.8
+    },
+    "citation_value": {
+      "type": "score",
+      "score": 0.5,
+      "confidence": 0.8
+    }
+  },
+  "role-skip": {
+    "topic_match": {
+      "type": "noul",
+      "noul": 0.9
+    },
+    "method_transferable": {
+      "type": "noul",
+      "noul": 0.9
+    },
+    "evidence_compatible": {
+      "type": "noul",
+      "noul": 0.9
+    },
+    "role_in_paper": {
+      "type": "choice",
+      "choice": "skip",
+      "confidence": 0.8
+    },
+    "problem_overlap": {
+      "type": "score",
+      "score": 3,
+      "confidence": 0.8
+    },
+    "method_reuse": {
+      "type": "score",
+      "score": 3,
+      "confidence": 0.8
+    },
+    "experiment_transfer": {
+      "type": "score",
+      "score": 3,
+      "confidence": 0.8
+    },
+    "citation_value": {
+      "type": "score",
+      "score": 3,
+      "confidence": 0.8
+    }
+  },
+  "uncertain-gate": {
+    "topic_match": {
+      "type": "noul",
+      "noul": 0.42
+    },
+    "method_transferable": {
+      "type": "noul",
+      "noul": 0.7
+    },
+    "evidence_compatible": {
+      "type": "noul",
+      "noul": 0.7
+    },
+    "role_in_paper": {
+      "type": "choice",
+      "choice": "method",
+      "confidence": 0.8
+    },
+    "problem_overlap": {
+      "type": "score",
+      "score": 1.8,
+      "confidence": 0.8
+    },
+    "method_reuse": {
+      "type": "score",
+      "score": 1.7,
+      "confidence": 0.8
+    },
+    "experiment_transfer": {
+      "type": "score",
+      "score": 1.6,
+      "confidence": 0.8
+    },
+    "citation_value": {
+      "type": "score",
+      "score": 1.5,
+      "confidence": 0.8
+    }
+  }
+}
