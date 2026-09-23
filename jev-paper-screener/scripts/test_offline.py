@@ -73,11 +73,43 @@ def main() -> int:
     if default_total == flipped_total:
         failures.append("weight changes should alter ranking score")
 
-    result = screen_papers(fixtures["project"], papers, incomplete, answers_by_id=fixtures["answers_by_id"])
+    result = screen_papers(
+        fixtures["project"],
+        papers,
+        incomplete,
+        answers_by_id=fixtures["answers_by_id"],
+        refine_answers_by_id=fixtures.get("refine_answers_by_id"),
+    )
     by_id = {row["paper"]["paper_id"]: row["decision"]["decision"] for row in result["decisions"]}
     for paper_id, decision in fixtures["expected_decisions"].items():
         if by_id.get(paper_id) != decision:
             failures.append(f"{paper_id} expected {decision}, got {by_id.get(paper_id)}")
+
+    by_stage = {row["paper"]["paper_id"]: row["decision"].get("evidence_stage") for row in result["decisions"]}
+    if by_stage.get("keep-direct") != "intro_method":
+        failures.append("keep-direct should be overridden by intro/method pass")
+    if "drop-unrelated" in (result.get("raw_jev") or {}) and any(key.endswith("::intro_method") and key.startswith("drop-unrelated") for key in result.get("raw_jev", {})):
+        failures.append("high-confidence drop should not be refined")
+    if any(row["paper"]["paper_id"] == "low-score" and "refine_incomplete" in (row["decision"].get("flags") or []) for row in result["decisions"]):
+        pass
+    else:
+        if not any(row["paper"]["paper_id"] == "low-score" and row["decision"].get("evidence_stage") in {None, "abstract", "refine_incomplete"} for row in result["decisions"]):
+            failures.append("low-score refine stage unexpected")
+
+
+    missing_method = next(paper for paper in papers if paper.paper_id == "zh-risk")
+    missing_method.method = ""
+    missing_method.introduction = "RGB grounding intro only."
+    held = screen_papers(
+        fixtures["project"],
+        [missing_method],
+        [],
+        answers_by_id={"zh-risk": fixtures["answers_by_id"]["zh-risk"]},
+        refine_answers_by_id={"zh-risk": fixtures["refine_answers_by_id"]["zh-risk"]},
+    )
+    held_row = held["decisions"][0]["decision"]
+    if held_row["decision"] != "review" or "refine_incomplete" not in held_row["flags"]:
+        failures.append("missing method section should hold first-pass decision")
 
     with tempfile.TemporaryDirectory() as tmp:
         out = Path(tmp) / "offline-fixture"

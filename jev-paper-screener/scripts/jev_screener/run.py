@@ -28,13 +28,17 @@ def answers_from_sdk(response: Any) -> dict[str, Any]:
     return payload
 
 
-def score_with_client(client: Any, project: dict[str, Any], paper: NormalizedPaper, model: str = MODEL_ID) -> dict[str, Any]:
+def score_with_client(client: Any, project: dict[str, Any], paper: NormalizedPaper, model: str = MODEL_ID, stage: str = "abstract") -> dict[str, Any]:
     response = client.system_one(
-        state=build_state(project, paper.to_dict()),
-        questions=build_questions(),
+        state=build_state(project, paper.to_dict(), stage),
+        questions=build_questions(stage),
         model=model,
     )
     return answers_from_sdk(response)
+
+
+def _can_refine(paper: NormalizedPaper) -> bool:
+    return bool((paper.introduction or "").strip() and (paper.method or "").strip())
 
 
 def screen_papers(
@@ -43,14 +47,17 @@ def screen_papers(
     incomplete: list[IncompletePaper],
     scorer: Callable[[dict[str, Any], NormalizedPaper], dict[str, Any]] | None = None,
     answers_by_id: dict[str, dict[str, Any]] | None = None,
+    refine_answers_by_id: dict[str, dict[str, Any]] | None = None,
     weights: dict[str, float] | None = None,
     model: str = MODEL_ID,
+    refine_keep_review: bool = True,
 ) -> dict[str, Any]:
     weights = normalize_weights(weights)
     decisions: list[dict[str, Any]] = []
     raw: dict[str, Any] = {}
     errors: list[dict[str, Any]] = []
 
+    first_pass: list[dict[str, Any]] = []
     for paper in papers:
         try:
             if answers_by_id and paper.paper_id in answers_by_id:
@@ -61,9 +68,41 @@ def screen_papers(
                 raise RuntimeError("TYPESAFE_API_KEY is missing; scoring requires a live Jev client")
             raw[paper.paper_id] = answers
             routed = route_paper(answers, weights=weights, flags=paper.flags)
-            decisions.append({"paper": paper.to_dict(), "decision": routed.to_dict()})
+            payload = {"paper": paper, "decision": routed}
+            first_pass.append(payload)
         except Exception as exc:
             errors.append({"paper_id": paper.paper_id, "title": paper.title, "error": str(exc)})
+
+    for item in first_pass:
+        paper = item["paper"]
+        routed = item["decision"]
+        if refine_keep_review and routed.decision in {"keep", "review"}:
+            if not _can_refine(paper):
+                routed.evidence_stage = "refine_incomplete"
+                routed.refine_reason = "missing_intro_method"
+                routed.flags = list(routed.flags) + ["refine_incomplete"]
+                paper.evidence_stage = "refine_incomplete"
+                paper.flags = list(paper.flags) + ["refine_incomplete"]
+            else:
+                try:
+                    if refine_answers_by_id and paper.paper_id in refine_answers_by_id:
+                        refine_answers = refine_answers_by_id[paper.paper_id]
+                    elif scorer:
+                        refine_answers = scorer(project, paper)
+                    else:
+                        raise RuntimeError("second-pass answers missing")
+                    raw[f"{paper.paper_id}::intro_method"] = refine_answers
+                    routed = route_paper(refine_answers, weights=weights, flags=paper.flags)
+                    routed.evidence_stage = "intro_method"
+                    routed.refined = True
+                    routed.refine_reason = "intro_method_override"
+                    paper.evidence_stage = "intro_method"
+                except Exception as exc:
+                    errors.append({"paper_id": paper.paper_id, "title": paper.title, "error": str(exc)})
+                    routed.evidence_stage = "refine_incomplete"
+                    routed.refine_reason = "refine_failed"
+                    routed.flags = list(routed.flags) + ["refine_failed"]
+        decisions.append({"paper": paper.to_dict(), "decision": routed.to_dict()})
 
     for item in incomplete:
         decisions.append(
@@ -79,6 +118,11 @@ def screen_papers(
                     "url": "",
                     "language_risk": False,
                     "flags": [item.reason],
+                    "introduction": "",
+                    "method": "",
+                    "full_text": "",
+                    "evidence_stage": "abstract",
+                    "section_source": "",
                 },
                 "decision": Decision(
                     decision="incomplete",
@@ -132,7 +176,7 @@ def write_run(result: dict[str, Any], out_dir: str | Path) -> Path:
     fieldnames = [
         "decision", "reason", "weighted_score", "role", "paper_id", "title", "year", "venue",
         "source", "url", "problem_overlap", "method_reuse", "experiment_transfer", "citation_value",
-        "topic_match", "method_transferable", "evidence_compatible", "flags",
+        "topic_match", "method_transferable", "evidence_compatible", "evidence_stage", "refined", "flags",
     ]
     with (path / "ranked.csv").open("w", encoding="utf-8", newline="") as handle:
         writer = csv.DictWriter(handle, fieldnames=fieldnames)
@@ -161,6 +205,8 @@ def write_run(result: dict[str, Any], out_dir: str | Path) -> Path:
                     "topic_match": gates.get("topic_match"),
                     "method_transferable": gates.get("method_transferable"),
                     "evidence_compatible": gates.get("evidence_compatible"),
+                    "evidence_stage": decision.get("evidence_stage") or paper.get("evidence_stage") or "abstract",
+                    "refined": decision.get("refined"),
                     "flags": ";".join(decision.get("flags") or paper.get("flags") or []),
                 }
             )

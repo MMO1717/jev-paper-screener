@@ -35,6 +35,9 @@ class Decision:
     role: str
     role_confidence: float
     flags: list[str] = field(default_factory=list)
+    evidence_stage: str = "abstract"
+    refined: bool = False
+    refine_reason: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         payload = asdict(self)
@@ -130,4 +133,6 @@ def route_paper(
         role=role,
         role_confidence=round(role_confidence, 4),
         flags=flags,
+        evidence_stage="abstract",
+        refined=False,
     )

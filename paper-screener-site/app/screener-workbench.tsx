@@ -50,6 +50,7 @@ export function ScreenerWorkbench() {
   const [paperTitle, setPaperTitle] = useState("");
   const [abstract, setAbstract] = useState("");
   const [files, setFiles] = useState<File[]>([]);
+  const [refineKeepReview, setRefineKeepReview] = useState(true);
 
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
@@ -100,6 +101,7 @@ export function ScreenerWorkbench() {
             form.set("paper_title", payload.paper_title || paperTitle);
             form.set("abstract", payload.abstract || abstract);
             form.set("apiKey", payload.api_key || apiKey);
+            form.set("refine_keep_review", refineKeepReview ? "true" : "false");
             const response = await fetch("/api/screen", { method: "POST", body: form });
             const res = await response.json();
             setResult(res);
@@ -111,7 +113,7 @@ export function ScreenerWorkbench() {
       ),
     ).catch((err) => setError(err instanceof Error ? err.message : "Tool registration failed."));
     return () => lifecycle.abort();
-  }, [title, brief, method, evidence, url, text, paperTitle, abstract, apiKey]);
+  }, [title, brief, method, evidence, url, text, paperTitle, abstract, apiKey, refineKeepReview]);
 
   function loadExample() {
     setTitle("基于反思与强化学习的情感支持对话自进化机制");
@@ -139,6 +141,7 @@ export function ScreenerWorkbench() {
       form.set("method_constraints", method);
       form.set("evidence_constraints", evidence);
       form.set("apiKey", apiKey);
+      form.set("refine_keep_review", refineKeepReview ? "true" : "false");
       form.set("url", url);
       form.set("text", text);
       form.set("paper_title", paperTitle);
@@ -166,7 +169,7 @@ export function ScreenerWorkbench() {
 
   function exportCsv() {
     if (!result?.decisions?.length) return;
-    const headers = ["ID", "Title", "Authors", "Year", "Decision", "Weighted Score", "Role", "Reason", "URL", "Flags"];
+    const headers = ["ID", "Title", "Authors", "Year", "Decision", "Weighted Score", "Role", "Reason", "Evidence Stage", "Refined", "URL", "Flags"];
     const rows = result.decisions.map((row) => [
       `"${(row.paper.paper_id || "").replace(/"/g, '""')}"`,
       `"${(row.paper.title || "").replace(/"/g, '""')}"`,
@@ -176,6 +179,8 @@ export function ScreenerWorkbench() {
       row.decision.weighted_score,
       `"${row.decision.role}"`,
       `"${row.decision.reason}"`,
+      `"${row.decision.evidence_stage || row.paper.evidence_stage || "abstract"}"`,
+      `"${row.decision.refined ? "yes" : "no"}"`,
       `"${row.paper.url || ""}"`,
       `"${(row.decision.flags || []).join(";")}"`,
     ]);
@@ -313,6 +318,21 @@ export function ScreenerWorkbench() {
           </p>
         </div>
 
+        <div className="flex items-center justify-between rounded-lg border border-border px-3 py-2">
+          <Label htmlFor="refine" className="text-xs font-semibold">
+            加深 Keep/Review
+          </Label>
+          <input
+            id="refine"
+            type="checkbox"
+            checked={refineKeepReview}
+            onChange={(event) => setRefineKeepReview(event.target.checked)}
+            className="size-4"
+          />
+        </div>
+        <p className="text-[11px] text-muted-foreground -mt-2">
+          默认开启。对 Keep/Review 再看引言和方法；抽不到段落则保持第一轮并标记待审。
+        </p>
         <Button type="submit" disabled={busy} className="w-full font-medium mt-2">
           {busy ? <LoaderCircle className="animate-spin mr-2 size-4" /> : null}
           {busy
@@ -603,6 +623,15 @@ export function ScreenerWorkbench() {
                               </div>
                             )}
 
+                            {row.decision.evidence_stage ? (
+                              <Badge variant="secondary" className="text-[10px] py-0 px-1.5">
+                                {row.decision.evidence_stage === "intro_method"
+                                  ? "第二轮: 引言+方法"
+                                  : row.decision.evidence_stage === "refine_incomplete"
+                                    ? "待审: 缺引言/方法"
+                                    : "第一轮: 摘要"}
+                              </Badge>
+                            ) : null}
                             {row.decision.flags?.length ? (
                               <div className="flex flex-wrap gap-1">
                                 {row.decision.flags.map((flag) => (

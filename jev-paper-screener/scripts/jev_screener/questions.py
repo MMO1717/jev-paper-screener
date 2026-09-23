@@ -44,7 +44,22 @@ def normalize_weights(weights: dict[str, float] | None = None) -> dict[str, floa
     return {key: value / total for key, value in raw.items()}
 
 
-def build_state(project: dict[str, Any], paper: dict[str, Any]) -> dict[str, Any]:
+def build_state(project: dict[str, Any], paper: dict[str, Any], stage: str = "abstract") -> dict[str, Any]:
+    paper_state = (
+        {
+            "title": paper.get("title") or "",
+            "introduction": paper.get("introduction") or "",
+            "method": paper.get("method") or "",
+        }
+        if stage == "intro_method"
+        else {
+            "title": paper.get("title") or "",
+            "authors": paper.get("authors") or "",
+            "year": paper.get("year") or "",
+            "venue": paper.get("venue") or "",
+            "abstract": paper.get("abstract") or "",
+        }
+    )
     return {
         "project": {
             "title": project.get("title") or "",
@@ -52,21 +67,21 @@ def build_state(project: dict[str, Any], paper: dict[str, Any]) -> dict[str, Any
             "method_constraints": project.get("method_constraints") or "",
             "evidence_constraints": project.get("evidence_constraints") or "",
         },
-        "paper": {
-            "title": paper.get("title") or "",
-            "authors": paper.get("authors") or "",
-            "year": paper.get("year") or "",
-            "venue": paper.get("venue") or "",
-            "abstract": paper.get("abstract") or "",
-        },
+        "paper": paper_state,
     }
 
 
-def build_questions() -> dict[str, dict[str, Any]]:
+def build_questions(stage: str = "abstract") -> dict[str, dict[str, Any]]:
+    evidence_fields = (
+        "`paper.title`, `paper.introduction`, and `paper.method`"
+        if stage == "intro_method"
+        else "`paper.title` and `paper.abstract`"
+    )
+    method_evidence = "`paper.method`" if stage == "intro_method" else "`paper.abstract`"
     return {
         "topic_match": {
             "type": "noul",
-            "instructions": "Based only on `paper.title` and `paper.abstract`, is this paper about the same research problem family as `project.title` and `project.brief`?",
+            "instructions": f"Based only on {evidence_fields}, is this paper about the same research problem family as `project.title` and `project.brief`?",
             "criteria": {
                 "true": "The paper addresses the same problem family, task, or scientific question as the project.",
                 "false": "The paper is about a different problem, even if some methods or keywords overlap.",
@@ -74,15 +89,15 @@ def build_questions() -> dict[str, dict[str, Any]]:
         },
         "method_transferable": {
             "type": "noul",
-            "instructions": "Based only on `paper.title` and `paper.abstract`, could a method, architecture, training recipe, or analysis procedure from this paper be reused in the project described by `project.brief` and `project.method_constraints`?",
+            "instructions": f"Based only on {evidence_fields}, could a method, architecture, training recipe, or analysis procedure from this paper be reused in the project described by `project.brief` and `project.method_constraints`?",
             "criteria": {
-                "true": "The abstract describes a method that could be adapted without changing the project's core task.",
+                "true": "The described method could be adapted without changing the project's core task.",
                 "false": "The method is tied to a different task, modality, or setting that the project cannot use.",
             },
         },
         "evidence_compatible": {
             "type": "noul",
-            "instructions": "Based only on `paper.title` and `paper.abstract`, is the paper's evidence type compatible with `project.evidence_constraints`?",
+            "instructions": f"Based only on {evidence_fields}, is the paper's evidence type compatible with `project.evidence_constraints`?",
             "criteria": {
                 "true": "The paper's data, evaluation, or evidence type can sit beside the project's intended evidence without a category error.",
                 "false": "The paper's evidence is a different kind, such as clinical claims, official scores, or a mismatched modality, and should not be mixed in.",
@@ -90,12 +105,12 @@ def build_questions() -> dict[str, dict[str, Any]]:
         },
         "problem_overlap": {
             "type": "score",
-            "instructions": "How much does `paper.abstract` overlap the project's scientific problem?",
+            "instructions": f"How much does {method_evidence} overlap the project's scientific problem?",
             "criteria": SCORE_LEVELS,
         },
         "method_reuse": {
             "type": "score",
-            "instructions": "How reusable is the paper's method for the current project?",
+            "instructions": f"How reusable is the method described in {method_evidence} for the current project?",
             "criteria": SCORE_LEVELS,
         },
         "experiment_transfer": {

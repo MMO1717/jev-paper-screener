@@ -125,7 +125,9 @@ export async function POST(request: Request) {
     }
 
     const apiKey = (body.apiKey || body.api_key || request.headers.get("x-typesafe-api-key") || "") as string;
-    const result = await scorePapers(project, collected.papers, collected.incomplete, apiKey);
+    const refineRaw = body.refine_keep_review ?? body.refineKeepReview ?? "true";
+    const refineKeepReview = String(refineRaw).toLowerCase() !== "false";
+    const result = await scorePapers(project, collected.papers, collected.incomplete, apiKey, refineKeepReview);
     return Response.json(result, { status: result.ok ? 200 : 400 });
   } catch (error) {
     return Response.json(

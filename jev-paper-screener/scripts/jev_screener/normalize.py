@@ -24,6 +24,11 @@ class NormalizedPaper:
     url: str
     language_risk: bool
     flags: list[str]
+    introduction: str = ""
+    method: str = ""
+    full_text: str = ""
+    evidence_stage: str = "abstract"
+    section_source: str = ""
 
     def to_dict(self) -> dict[str, Any]:
         return asdict(self)
@@ -105,6 +110,11 @@ def normalize_record(record: dict[str, Any], source_hint: str = "") -> tuple[Nor
         url=_first(record, "url", "link", "pdf_url", "html_url"),
         language_risk=language_risk,
         flags=flags,
+        introduction=_first(record, "introduction", "intro"),
+        method=_first(record, "method", "methods", "approach"),
+        full_text=_first(record, "full_text", "fulltext", "body"),
+        evidence_stage="abstract",
+        section_source=_first(record, "section_source") or "",
     )
     return paper, None
 

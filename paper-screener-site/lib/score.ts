@@ -1,6 +1,8 @@
 import { env } from "cloudflare:workers";
+import { canRefine, extractIntroMethodSections } from "./sections";
 import {
   MODEL_ID,
+  type EvidenceStage,
   type PaperRecord,
   type ProjectBrief,
   type ScreenedPaper,
@@ -19,7 +21,7 @@ type TypeSafeAnswer = {
   probabilities?: Record<string, number>;
 };
 
-async function scorePaper(project: ProjectBrief, paper: PaperRecord, apiKey: string) {
+async function scorePaper(project: ProjectBrief, paper: PaperRecord, apiKey: string, stage: EvidenceStage = "abstract") {
   const response = await fetch("https://api.typesafe.ai/v1/systemone", {
     method: "POST",
     headers: {
@@ -27,9 +29,9 @@ async function scorePaper(project: ProjectBrief, paper: PaperRecord, apiKey: str
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      state: buildState(project, paper),
+      state: buildState(project, paper, stage),
       model: MODEL_ID,
-      questions: buildQuestions(),
+      questions: buildQuestions(stage),
     }),
   });
   const payload = (await response.json().catch(() => ({}))) as any;
@@ -48,11 +50,24 @@ async function scorePaper(project: ProjectBrief, paper: PaperRecord, apiKey: str
   };
 }
 
+function prepareRefineSections(paper: PaperRecord) {
+  if (paper.introduction && paper.method) {
+    return {
+      introduction: paper.introduction,
+      method: paper.method,
+      section_source: paper.section_source || "heading",
+    };
+  }
+  if (paper.full_text) return extractIntroMethodSections(paper.full_text);
+  return extractIntroMethodSections("");
+}
+
 export async function scorePapers(
   project: ProjectBrief,
   papers: PaperRecord[],
   incomplete: { paper_id: string; title: string; reason: string }[],
   customApiKey?: string,
+  refineKeepReview = true,
 ) {
   let envKey = "";
   try {
@@ -70,13 +85,17 @@ export async function scorePapers(
     };
   }
   const BATCH_SIZE = 5;
-  for (let i = 0; i < papers.length; i += BATCH_SIZE) {
+  const firstPass: ScreenedPaper[] = [];
+    for (let i = 0; i < papers.length; i += BATCH_SIZE) {
     const chunk = papers.slice(i, i + BATCH_SIZE);
     await Promise.all(
       chunk.map(async (paper) => {
         try {
-          const scored = await scorePaper(project, paper, apiKey);
-          decisions.push({ paper: scored.paper, decision: scored.decision });
+          const scored = await scorePaper(project, paper, apiKey, "abstract");
+          scored.paper.evidence_stage = "abstract";
+          scored.decision.evidence_stage = "abstract";
+          firstPass.push({ paper: scored.paper, decision: scored.decision });
+          firstRaw[paper.paper_id] = scored.raw;
           raw[paper.paper_id] = scored.raw;
         } catch (error) {
           errors.push({
@@ -87,6 +106,72 @@ export async function scorePapers(
         }
       }),
     );
+  }
+  const refineTargets = refineKeepReview
+    ? firstPass.filter((row) => row.decision.decision === "keep" || row.decision.decision === "review")
+    : [];
+  const refined = new Map<string, ScreenedPaper>();
+  for (let i = 0; i < refineTargets.length; i += BATCH_SIZE) {
+    const chunk = refineTargets.slice(i, i + BATCH_SIZE);
+    await Promise.all(
+      chunk.map(async (row) => {
+        const sections = prepareRefineSections(row.paper);
+        if (!canRefine(sections)) {
+          const flagged = {
+            ...row,
+            paper: {
+              ...row.paper,
+              evidence_stage: "refine_incomplete" as const,
+              flags: [...row.paper.flags, sections.missing_reason || "refine_incomplete"],
+            },
+            decision: {
+              ...row.decision,
+              evidence_stage: "refine_incomplete" as const,
+              refined: false,
+              refine_reason: sections.missing_reason || "refine_incomplete",
+              flags: [...row.decision.flags, "refine_incomplete"],
+            },
+          };
+          refined.set(row.paper.paper_id, flagged);
+          return;
+        }
+        const paper = {
+          ...row.paper,
+          introduction: sections.introduction,
+          method: sections.method,
+          section_source: sections.section_source,
+        };
+        try {
+          const scored = await scorePaper(project, paper, apiKey, "intro_method");
+          scored.paper.evidence_stage = "intro_method";
+          scored.decision.evidence_stage = "intro_method";
+          scored.decision.refined = true;
+          scored.decision.refine_reason = "intro_method_override";
+          refined.set(paper.paper_id, { paper: scored.paper, decision: scored.decision });
+          raw[`${paper.paper_id}::intro_method`] = scored.raw;
+        } catch (error) {
+          errors.push({
+            paper_id: row.paper.paper_id,
+            title: row.paper.title,
+            error: error instanceof Error ? error.message : "Second-pass scoring failed.",
+          });
+          refined.set(row.paper.paper_id, {
+            ...row,
+            paper: { ...row.paper, evidence_stage: "refine_incomplete" },
+            decision: {
+              ...row.decision,
+              evidence_stage: "refine_incomplete",
+              refined: false,
+              refine_reason: "refine_failed",
+              flags: [...row.decision.flags, "refine_failed"],
+            },
+          });
+        }
+      }),
+    );
+  }
+  for (const row of firstPass) {
+    decisions.push(refined.get(row.paper.paper_id) || row);
   }
   decisions.push(...incomplete.map(incompleteDecision));
   return {

@@ -35,3 +35,12 @@ Choice: `role_in_paper` = baseline | method | related_work | dataset | skip.
 `inputs.json`, `raw_jev.json`, `ranked.csv`, `decisions.json`
 
 Screening is an aid, not official related-work evidence.
+
+
+## Evidence stages
+
+- `abstract`: first pass over title + abstract.
+- `intro_method`: second pass over introduction + method; this overrides the first pass.
+- `refine_incomplete`: Keep/Review lacked extractable introduction or method. Keep the first-pass decision and do not send a second Jev call.
+
+High-confidence Drop is never refined. Second-pass state contains only the project brief, title, introduction, and method.

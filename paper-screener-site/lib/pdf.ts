@@ -1,4 +1,5 @@
 import { extractText } from "unpdf";
+import { canRefine, extractIntroMethodSections } from "./sections";
 import { type IncompletePaper, type PaperRecord, normalizeCandidates } from "./screener";
 
 const BANNER_PATTERNS = [
@@ -141,8 +142,9 @@ export function extractPaperFromPdfText(
   // Extract year
   const yearMatch = combined.match(/\b(19\d{2}|20\d{2})\b/);
   const year = yearMatch ? yearMatch[1] : "";
-
-  return normalizeCandidates(
+  const fullText = pagesText.join("\n\n");
+  const sections = extractIntroMethodSections(fullText);
+  const normalized = normalizeCandidates(
     [
       {
         title,
@@ -152,10 +154,24 @@ export function extractPaperFromPdfText(
         venue: "PDF Document",
         url,
         source,
+        introduction: sections.introduction,
+        method: sections.method,
+        full_text: fullText.slice(0, 20000),
       },
     ],
     source,
   );
+  if (normalized.papers[0]) {
+    const paper = normalized.papers[0];
+    paper.introduction = sections.introduction;
+    paper.method = sections.method;
+    paper.full_text = fullText.slice(0, 20000);
+    paper.section_source = sections.section_source;
+    if (!canRefine(sections) && sections.missing_reason) {
+      paper.flags = [...paper.flags, sections.missing_reason];
+    }
+  }
+  return normalized;
 }
 
 export async function papersFromPdfBytes(

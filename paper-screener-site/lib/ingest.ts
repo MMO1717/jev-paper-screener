@@ -1,4 +1,5 @@
 import { papersFromPdfBytes } from "./pdf";
+import { canRefine, extractIntroMethodSections, htmlToPlainText } from "./sections";
 import {
   type IncompletePaper,
   type PaperRecord,
@@ -8,6 +9,21 @@ import {
 
 const MAX_BYTES = 12_000_000;
 const FETCH_TIMEOUT_MS = 15_000;
+
+function attachSections(result: { papers: PaperRecord[]; incomplete: IncompletePaper[] }, text: string) {
+  if (!result.papers[0] || !text.trim()) return result;
+  const sections = extractIntroMethodSections(text);
+  const paper = result.papers[0];
+  paper.introduction = sections.introduction;
+  paper.method = sections.method;
+  paper.full_text = text.slice(0, 20000);
+  paper.section_source = sections.section_source;
+  if (!canRefine(sections) && sections.missing_reason) {
+    paper.flags = [...paper.flags, sections.missing_reason];
+  }
+  return result;
+}
+
 
 function decodeHtml(value: string) {
   return value
@@ -97,7 +113,7 @@ function paperFromHtml(html: string, url: string): { papers: PaperRecord[]; inco
   const authors = meta(html, ["citation_author", "dc.creator"]);
   const year = meta(html, ["citation_publication_date", "citation_date", "dc.date"]);
   const venue = meta(html, ["citation_journal_title", "citation_conference_title"]);
-  return paperFromFields({
+  const result = paperFromFields({
     title,
     abstract,
     authors,
@@ -106,6 +122,7 @@ function paperFromHtml(html: string, url: string): { papers: PaperRecord[]; inco
     url,
     source: new URL(url).hostname,
   });
+  return attachSections(result, htmlToPlainText(html));
 }
 
 async function fetchResource(url: string) {
@@ -171,7 +188,7 @@ export async function papersFromUrl(rawUrl: string) {
     const abstract = tagText(entry, "summary");
     const authors = [...entry.matchAll(/<name>([^<]+)<\/name>/g)].map((match) => match[1]).join("; ");
     const published = tagText(entry, "published");
-    return paperFromFields({
+    const result = paperFromFields({
       title,
       abstract,
       authors,
@@ -180,6 +197,16 @@ export async function papersFromUrl(rawUrl: string) {
       url: `https://arxiv.org/abs/${id || ""}`.replace(/\/abs\/$/, url.href),
       source: "arxiv",
     });
+    const absUrl = result.papers[0]?.url || url.href;
+    try {
+      const html = await fetchResource(absUrl.replace('/abs/', '/html/'));
+      if (!html.isPdf && html.text) return attachSections(result, htmlToPlainText(html.text));
+    } catch {}
+    result.papers.forEach((paper) => {
+      paper.flags = [...paper.flags, "missing_intro_method"];
+      paper.section_source = "missing";
+    });
+    return result;
   }
   return paperFromHtml(fetched.text, fetched.finalUrl);
 }
