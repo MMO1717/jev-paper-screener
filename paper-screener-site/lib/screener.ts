@@ -42,6 +42,8 @@ export type ProjectBrief = {
   evidence_constraints: string;
 };
 
+export type EvidenceStage = "abstract" | "intro_method" | "refine_incomplete";
+
 export type PaperRecord = {
   paper_id: string;
   title: string;
@@ -53,6 +55,11 @@ export type PaperRecord = {
   url: string;
   language_risk: boolean;
   flags: string[];
+  introduction?: string;
+  method?: string;
+  full_text?: string;
+  evidence_stage?: EvidenceStage;
+  section_source?: "heading" | "fallback" | "missing";
 };
 
 export type IncompletePaper = {
@@ -78,6 +85,9 @@ export type Decision = {
   role: string;
   role_confidence: number;
   flags: string[];
+  evidence_stage?: EvidenceStage;
+  refined?: boolean;
+  refine_reason?: string;
 };
 
 export type ScreenedPaper = {
@@ -147,12 +157,18 @@ export function normalizeWeights(weights?: Record<string, number>) {
   ) as Record<(typeof SCORE_DIMENSIONS)[number], number>;
 }
 
-export function buildQuestions() {
+export function buildQuestions(stage: EvidenceStage = "abstract") {
+  const evidenceFields =
+    stage === "intro_method"
+      ? "`paper.title`, `paper.introduction`, and `paper.method`"
+      : "`paper.title` and `paper.abstract`";
+  const methodEvidence =
+    stage === "intro_method" ? "`paper.method`" : "`paper.abstract`";
   return {
     topic_match: {
       type: "noul",
       instructions:
-        "Based only on `paper.title` and `paper.abstract`, is this paper about the same research problem family as `project.title` and `project.brief`?",
+        `Based only on ${evidenceFields}, is this paper about the same research problem family as \`project.title\` and \`project.brief\`?`,
       criteria: {
         true: "The paper addresses the same problem family, task, or scientific question as the project.",
         false: "The paper is about a different problem, even if some methods or keywords overlap.",
@@ -161,16 +177,16 @@ export function buildQuestions() {
     method_transferable: {
       type: "noul",
       instructions:
-        "Based only on `paper.title` and `paper.abstract`, could a method, architecture, training recipe, or analysis procedure from this paper be reused in the project described by `project.brief` and `project.method_constraints`?",
+        `Based only on ${evidenceFields}, could a method, architecture, training recipe, or analysis procedure from this paper be reused in the project described by \`project.brief\` and \`project.method_constraints\`?`,
       criteria: {
-        true: "The abstract describes a method that could be adapted without changing the project's core task.",
+        true: "The described method could be adapted without changing the project's core task.",
         false: "The method is tied to a different task, modality, or setting that the project cannot use.",
       },
     },
     evidence_compatible: {
       type: "noul",
       instructions:
-        "Based only on `paper.title` and `paper.abstract`, is the paper's evidence type compatible with `project.evidence_constraints`?",
+        `Based only on ${evidenceFields}, is the paper's evidence type compatible with \`project.evidence_constraints\`?`,
       criteria: {
         true: "The paper's data, evaluation, or evidence type can sit beside the project's intended evidence without a category error.",
         false: "The paper's evidence is a different kind, such as clinical claims, official scores, or a mismatched modality, and should not be mixed in.",
@@ -178,12 +194,12 @@ export function buildQuestions() {
     },
     problem_overlap: {
       type: "score",
-      instructions: "How much does `paper.abstract` overlap the project's scientific problem?",
+      instructions: `How much does ${methodEvidence} overlap the project's scientific problem?`,
       criteria: SCORE_LEVELS,
     },
     method_reuse: {
       type: "score",
-      instructions: "How reusable is the paper's method for the current project?",
+      instructions: `How reusable is the method described in ${methodEvidence} for the current project?`,
       criteria: SCORE_LEVELS,
     },
     experiment_transfer: {
@@ -204,7 +220,21 @@ export function buildQuestions() {
   };
 }
 
-export function buildState(project: ProjectBrief, paper: PaperRecord) {
+export function buildState(project: ProjectBrief, paper: PaperRecord, stage: EvidenceStage = "abstract") {
+  const paperState =
+    stage === "intro_method"
+      ? {
+          title: paper.title || "",
+          introduction: paper.introduction || "",
+          method: paper.method || "",
+        }
+      : {
+          title: paper.title || "",
+          authors: paper.authors || "",
+          year: paper.year || "",
+          venue: paper.venue || "",
+          abstract: paper.abstract || "",
+        };
   return {
     project: {
       title: project.title || "",
@@ -212,13 +242,7 @@ export function buildState(project: ProjectBrief, paper: PaperRecord) {
       method_constraints: project.method_constraints || "",
       evidence_constraints: project.evidence_constraints || "",
     },
-    paper: {
-      title: paper.title || "",
-      authors: paper.authors || "",
-      year: paper.year || "",
-      venue: paper.venue || "",
-      abstract: paper.abstract || "",
-    },
+    paper: paperState,
   };
 }
 
@@ -243,6 +267,10 @@ export function normalizeRecord(record: Record<string, unknown>, sourceHint = ""
       url: first(record, ["url", "link", "pdf_url", "html_url"]),
       language_risk: languageRisk,
       flags: languageRisk ? ["language_risk"] : [],
+      introduction: first(record, ["introduction", "intro"]),
+      method: first(record, ["method", "methods", "approach"]),
+      full_text: first(record, ["full_text", "fulltext", "body"]),
+      evidence_stage: "abstract",
     },
   };
 }
@@ -433,6 +461,8 @@ export function routePaper(answers: Record<string, any>, weights?: Record<string
     role,
     role_confidence: Number(roleConfidence.toFixed(4)),
     flags: nextFlags,
+    evidence_stage: "abstract",
+    refined: false,
   };
 }
 
@@ -449,6 +479,7 @@ export function incompleteDecision(item: IncompletePaper): ScreenedPaper {
       url: "",
       language_risk: false,
       flags: [item.reason],
+      evidence_stage: "abstract",
     },
     decision: {
       decision: "incomplete",
@@ -460,6 +491,8 @@ export function incompleteDecision(item: IncompletePaper): ScreenedPaper {
       role: "skip",
       role_confidence: 0,
       flags: [item.reason],
+      evidence_stage: "abstract",
+      refined: false,
     },
   };
 }
